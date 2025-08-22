@@ -85,16 +85,21 @@
   .snap{flex: 0 0 84%; max-width:840px; aspect-ratio: 16/9; border-radius:16px; border:1px solid var(--border);
         background:#000 center/cover no-repeat; scroll-snap-align:center}
   .snap:nth-child(1){background-image:url("img/conjuro4.jpg")}
-  .snap:nth-child(2){background-image:linear-gradient(0deg, rgba(0,0,0,.35), rgba(0,0,0,.35)), url("img/el-conjuro-4-trailer-1200x900.jpg")}
-  .snap:nth-child(3){background-image:linear-gradient(0deg, rgba(0,0,0,.15), rgba(0,0,0,.15)), url("img/El-Conjuro-4.jpg")}
+  .snap:nth-child(2){background-image:url("img/cine.jpeg")}
+  .snap:nth-child(3){background-image:linear-gradient(0deg, rgba(0,0,0,.35), rgba(0,0,0,.35)), url("img/el-conjuro-4-trailer-1200x900.jpg")}
+  .snap:nth-child(4){background-image:linear-gradient(0deg, rgba(0,0,0,.15), rgba(0,0,0,.15)), url("img/El-Conjuro-4.jpg")}
   .snapwrap::-webkit-scrollbar{height:10px} .snapwrap::-webkit-scrollbar-thumb{background:#2a3754; border-radius:999px}
 
   .waiting{margin-top:26px; text-align:center; font-size:1.08rem; color:#ffdbe1}
-  .footer{text-align:center; padding:40px 16px 64px; color:var(--muted)}
+  .footer{text-align:center; padding:40px 16px 64px; color:#b7c0d8}
 
   /* Reveal on scroll */
   .reveal{opacity:0; transform:translateY(14px); transition:.7s ease}
   .reveal.visible{opacity:1; transform:none}
+
+  /* ====== NUEVO: sección corazón ====== */
+  .heart-section{text-align:center; margin-top:40px}
+  #heartCanvas{max-width:100%; height:auto; display:block; margin:0 auto}
 
   /* ====== MOBILE / SMALL SCREENS ====== */
   @media (max-width: 900px){
@@ -169,7 +174,7 @@
       <div class="grid">
         <div class="tile"><div class="content"><h3 style="margin:0 0 8px">🎟️ La peli</h3><p style="margin:0;color:var(--muted)">The Conjuring: Last Rites (El Conjuro 4). Yo llevo las entradas 😉</p></div></div>
         <div class="tile"><div class="content"><h3 style="margin:0 0 8px">🍫 Después</h3><p style="margin:0;color:var(--muted)">Lo que te provoque. Tú decides.</p></div></div>
-                <div class="tile"><div class="content"><h3 style="margin:0 0 8px">📍Dependiendo del dia</h3><p style="margin:0;color:var(--muted)">este plan me encargo yo 😉.</p></div></div>
+        <div class="tile"><div class="content"><h3 style="margin:0 0 8px">📍Dependiendo del día</h3><p style="margin:0;color:var(--muted)">Este plan me encargo yo 😉.</p></div></div>
       </div>
     </section>
 
@@ -180,12 +185,20 @@
         <div class="snap"></div>
         <div class="snap"></div>
         <div class="snap"></div>
+        <div class="snap"></div>
+        <div class="snap"></div>
       </div>
     </section>
 
     <div class="waiting reveal">
       Estaré esperando tu respuesta con mucha ilusión 💌. Psdt: Te extraño
     </div>
+
+    <!-- NUEVO: Corazón animado que se dibuja solo -->
+    <section class="reveal heart-section">
+      <h2>💖 Para ti</h2>
+      <canvas id="heartCanvas" width="320" height="280"></canvas>
+    </section>
   </main>
 
   <footer class="container footer">
@@ -265,6 +278,35 @@
     btnFX.textContent = on ? 'Apagar velitas ✨' : 'Encender velitas ✨';
     if(on && bugs.length===0) spawn(90);
   });
+
+  // ===== NUEVO: Corazón que se dibuja solo =====
+  const heartCanvas = document.getElementById("heartCanvas");
+  const hctx = heartCanvas.getContext("2d");
+  hctx.strokeStyle = "#ff4d5b";
+  hctx.lineWidth = 3;
+
+  const points = [];
+  for (let t = 0; t < Math.PI * 2; t += 0.05) {
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+    points.push({ x: x, y: -y });
+  }
+
+  let i2 = 0;
+  function drawHeart() {
+    if (i2 >= points.length) return;
+    const { x, y } = points[i2];
+    const scale = 10;
+    const cx = 160, cy = 140;
+    hctx.lineTo(cx + x * scale, cy + y * scale);
+    hctx.stroke();
+    i2++;
+    requestAnimationFrame(drawHeart);
+  }
+
+  hctx.beginPath();
+  hctx.moveTo(160, 140);
+  drawHeart();
 </script>
 </body>
 </html>

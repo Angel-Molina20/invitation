@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Invitación</title>
 <meta name="theme-color" content="#0b0f16">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🎬</text></svg>">
 
 <style>
   :root{
@@ -19,25 +20,30 @@
     color:var(--ink);
     background: radial-gradient(1100px 600px at 80% -10%, #18233f 0%, var(--bg) 55%), var(--bg);
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-    /* Importante: permitir scroll en pantallas pequeñas */
     overflow:auto;
   }
   a{color:inherit; text-decoration:none}
   :focus-visible{outline:none; box-shadow:var(--focus); border-radius:12px}
 
-  /* HERO (fondo con ken burns) */
+  /* HERO + fondo sutil */
   .hero{
     position:relative;
-    min-height:100svh; /* altura segura en móviles */
+    min-height:100svh;
     display:grid; place-items:center; isolation:isolate;
     padding: max(var(--container-pad), env(safe-area-inset-top)) var(--container-pad) max(72px, var(--container-pad)) var(--container-pad);
   }
+  /* Fondo con "Ken Burns" y película desenfocada */
   .hero::before{
-    content:""; position:absolute; inset:-3% -3%; z-index:-2;
+    content:""; position:absolute; inset:-3% -3%; z-index:-3;
+    background:
+      radial-gradient(60% 40% at 70% 20%, rgba(176,131,255,.20), transparent 60%),
+      radial-gradient(45% 35% at 20% 70%, rgba(255,77,91,.14), transparent 60%),
+      linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.15));
     animation: kenburns 26s ease-in-out infinite alternate;
-    transform-origin: 60% 50%; filter:saturate(1.05) brightness(.72) contrast(1.06);
+    transform-origin: 60% 50%;
+    filter:saturate(1.05) brightness(.85) contrast(1.06) blur(0.2px);
   }
-  .vignette{position:absolute; inset:0; z-index:-1;
+  .vignette{position:absolute; inset:0; z-index:-2;
     background:
       radial-gradient(1200px 600px at 12% 45%, rgba(0,0,0,.55), transparent 60%),
       linear-gradient(90deg, rgba(7,10,18,.96) 0%, rgba(7,10,18,.85) 42%, rgba(7,10,18,.45) 70%, rgba(7,10,18,.18) 100%);
@@ -45,23 +51,44 @@
   }
   @keyframes kenburns{from{transform:scale(1)} to{transform:scale(1.12)}}
 
-  /* TARJETA */
+  /* TARJETA con borde degradado */
   .card{
-    width:min(96%, 680px);
+    width:min(96%, 720px);
+    position:relative;
     background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-    border:1px solid var(--border); border-radius:var(--radius);
-    padding:clamp(18px,4.4vw,36px); backdrop-filter: blur(10px);
+    border-radius:var(--radius);
+    padding:clamp(18px,4.4vw,36px);
+    backdrop-filter: blur(10px);
     box-shadow: 0 20px 50px rgba(0,0,0,.35);
     transform: translateY(8px); opacity:0; transition:.8s ease;
     content-visibility:auto; contain-intrinsic-size: 1px 420px;
+    border:1px solid transparent;
+  }
+  /* Borde degradado mediante pseudo-elemento y máscara */
+  .card::before{
+    content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit;
+    padding:1px;
+    background:linear-gradient(120deg, rgba(255,77,91,.7), rgba(176,131,255,.6));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+  /* Glow suave */
+  .card::after{
+    content:""; position:absolute; inset:-12% -8%; z-index:-2; border-radius:inherit;
+    background: radial-gradient(30% 20% at 25% 0%, rgba(176,131,255,.18), transparent 60%),
+                radial-gradient(30% 20% at 90% 90%, rgba(255,77,91,.12), transparent 60%);
+    filter: blur(14px);
   }
   .card.visible{transform:none; opacity:1}
+
   .badge{
     display:inline-flex; align-items:center; gap:8px;
     padding:8px 12px; border-radius:999px; border:1px solid #2b3552; background:rgba(255,255,255,.05);
     font-weight:600; font-size:clamp(.85rem, 2.2vw, .95rem);
   }
-  .title{margin:14px 0 8px; font-size:clamp(1.3rem, 5.5vw, 2.2rem); line-height:1.2; letter-spacing:.2px}
+  .badge svg{width:16px;height:16px;opacity:.9}
+
+  .title{margin:14px 0 8px; font-size:clamp(1.3rem, 5.5vw, 2.25rem); line-height:1.2; letter-spacing:.2px; display:flex; align-items:center; gap:.5rem}
   .grad{background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent}
   .subtitle{margin:0 0 clamp(12px,2.6vw,18px); color:var(--muted); font-size:clamp(.95rem, 2.6vw, 1.05rem)}
   .note{
@@ -71,20 +98,32 @@
 
   .actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:8px}
   .btn{
+    position:relative;
     display:inline-block; padding:clamp(12px,2.8vw,14px) clamp(16px,3.2vw,18px);
     border-radius:14px; font-weight:800; letter-spacing:.2px; font-size:clamp(1rem, 2.8vw, 1.06rem);
     background:var(--accent); color:#fff; border:0; cursor:pointer;
     box-shadow:0 10px 28px rgba(255,77,91,.22); transition:transform .18s ease, box-shadow .18s ease;
-    min-width:160px; /* botón táctil cómodo */
+    min-width:160px;
+  }
+  .btn::after{ /* brillo diagonal sutil */
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background:linear-gradient(120deg, rgba(255,255,255,.15), transparent 30% 70%, rgba(255,255,255,.12));
+    opacity:0; transition:opacity .2s ease;
   }
   @media (hover:hover){
     .btn:hover{ transform: translateY(-2px) scale(1.01); box-shadow:0 16px 36px rgba(255,77,91,.28);}
+    .btn:hover::after{opacity:1}
   }
   .btn.ghost{
     background:transparent; color:var(--ink); border:1px solid #2b3552; box-shadow:none;
   }
 
-  /* PING decorativo */
+  .tiny{
+    margin-top:6px; color:var(--muted); font-size:.9rem; display:flex; align-items:center; gap:8px;
+    opacity:.9;
+  }
+
+  /* Ping decorativo */
   .ping{
     width:10px;height:10px;border-radius:999px;background:var(--accent);display:inline-block;position:relative;
     box-shadow:0 0 0 0 rgba(255,77,91,.5); margin-right:6px;
@@ -96,20 +135,17 @@
     100%{box-shadow:0 0 0 0 rgba(255,77,91,0)}
   }
 
-  /* Footer no absoluto: evita solaparse en pantallas pequeñas */
   .footer{
     width:100%; text-align:center; color:var(--muted);
     padding: 18px max(var(--container-pad), env(safe-area-inset-right)) max(calc(var(--container-pad) + env(safe-area-inset-bottom)), 18px) max(var(--container-pad), env(safe-area-inset-left));
     font-size:clamp(.82rem, 2.4vw, .95rem);
   }
 
-  /* RESPONSIVE extra */
   @media (max-width:600px){
     .actions{flex-direction:column}
     .btn, .btn.ghost{width:100%; text-align:center}
   }
 
-  /* Respeto a reduce-motion */
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important; transition:none !important}
     .hero::before{animation:none}
@@ -123,20 +159,27 @@
 
     <section class="card" id="card">
       <div class="badge" aria-label="invitación">
-        <span class="ping" aria-hidden="true"></span> Invitación
+        <span class="ping" aria-hidden="true"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h16v12H4z"/><path d="M4 18h16v2H4z"/><path d="M6 6h2v2H6zM10 6h2v2h-2zM14 6h2v2h-2z" fill="#0b0f16"/></svg>
+        Invitación
       </div>
 
       <h1 id="hero-title" class="title">
-        🎬 Hola <span class="grad">Dayana</span>
+        🎬 Hola <span class="grad" id="guestName">Dayana</span>
       </h1>
 
-      <p class="note">
+      <p class="note" id="heroCopy">
         Esta vez quise invitarte de una manera distinta, algo no tan usual, hecho con el cariño que te tengo.
         Si te gusta, me encantaría que lo veamos juntos.
       </p>
 
       <div class="actions" role="group" aria-label="Acciones">
         <button class="btn" id="continuar">Continuar</button>
+      </div>
+
+      <div class="tiny" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1a7 7 0 0 0-7 7c0 5.25-3 6.75-3 6.75h20S19 13.25 19 8a7 7 0 0 0-7-7zm0 22c4.418 0 8-1.79 8-4H4c0 2.21 3.582 4 8 4z"/></svg>
+        Prometo no compartir tus datos, solo quiero verte sonreír 😊
       </div>
     </section>
 
@@ -153,9 +196,22 @@
   const card = document.getElementById('card');
   requestAnimationFrame(()=> card.classList.add('visible'));
 
+  // Nombre dinámico: ?to=Nombre o localStorage('invitado') o fallback
+  const params = new URLSearchParams(location.search);
+  const fromQuery = params.get('to');
+  const fromStorage = localStorage.getItem('invitado');
+  const guest = (fromQuery && fromQuery.trim()) || (fromStorage && fromStorage.trim()) || 'Dayana';
+  document.getElementById('guestName').textContent = guest;
+
+  // Copys alternos para darle vida (elige uno al azar)
+  const copies = [
+    "Quise invitarte de una forma distinta, un pequeño detalle para alguien especial hecha con el cariño que te tengo. Si te gusta, me encantaría que lo veamos juntos.",
+  ];
+  document.getElementById('heroCopy').textContent = copies[Math.floor(Math.random()*copies.length)];
+
   // Guardar nombre y navegar
   document.getElementById('continuar').addEventListener('click', ()=>{
-    localStorage.setItem('invitado', 'Dayana');
+    localStorage.setItem('invitado', guest);
     window.location.href = 'invitacion.html';
   });
 </script>

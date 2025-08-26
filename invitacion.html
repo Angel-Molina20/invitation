@@ -145,6 +145,68 @@
     body{background:#fff; color:#000}
     .container{max-width:840px}
   }
+
+  /* ====== SALA DE CINE (pantalla + asientos) ====== */
+.theater{
+  margin: clamp(18px,3vw,26px) 0 4px;
+  display:flex; flex-direction:column; align-items:center; gap:18px;
+}
+.screen{
+  width:min(92%, 560px); height:10px; border-radius:999px;
+  background: linear-gradient(90deg, rgba(255,255,255,.35), rgba(255,255,255,.12), rgba(255,255,255,.35));
+  filter: blur(.2px); position:relative;
+}
+.screen::after{
+  content:""; position:absolute; inset:-40px -8%; z-index:-1; border-radius:18px;
+  background: radial-gradient(60% 100% at 50% -10%, rgba(255,255,255,.16), transparent 70%);
+  pointer-events:none;
+}
+.cinema{
+  display:grid; gap:8px 8px; justify-content:center;
+  grid-template-columns: repeat(10, 26px);
+  transform: perspective(600px) rotateX(18deg);
+  transform-origin: center top;
+  user-select:none;
+}
+.row-label{
+  grid-column: 1 / -1; text-align:center; color:var(--muted); font-size:.78rem; opacity:.9;
+  transform: translateY(-2px);
+}
+.seat{
+  width:26px; height:26px; border-radius:6px 6px 3px 3px;
+  background:#2b3552; box-shadow: inset 0 -2px 0 rgba(0,0,0,.35);
+  cursor:pointer; transition: transform .28s ease, box-shadow .28s ease, background .28s ease;
+  position:relative;
+}
+.seat::before{ /* respaldo */
+  content:""; position:absolute; left:3px; right:3px; top:-5px; height:8px; border-radius:5px 5px 0 0;
+  background:#2a3149; box-shadow: inset 0 -2px 0 rgba(0,0,0,.35);
+}
+.seat.selected{
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(255,77,91,.7), inset 0 -2px 0 rgba(0,0,0,.35);
+  transform: translateY(-2px) scale(1.06);
+}
+.seat:hover{ background: var(--accent2) }
+.seat.animate{ animation: pick .6s ease forwards }
+@keyframes pick{
+  0%{transform: translateY(6px) scale(.6); opacity:0}
+  80%{transform: translateY(-2px) scale(1.08); opacity:1}
+  100%{transform: translateY(-2px) scale(1.06); opacity:1}
+}
+.legend{
+  display:flex; gap:12px; align-items:center; color:var(--muted); font-size:.85rem; opacity:.9;
+}
+.legend .dot{
+  width:14px;height:14px;border-radius:4px;display:inline-block;background:#2b3552;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.35);
+}
+.legend .dot.sel{ background: var(--accent); box-shadow: 0 0 8px rgba(255,77,91,.7) }
+.legend .dot.hov{ background: var(--accent2) }
+
+@media (max-width:640px){
+  .cinema{grid-template-columns: repeat(8, 26px)}
+}
 </style>
 </head>
 <body>
@@ -184,6 +246,40 @@
   </header>
 
   <main id="main" class="container" role="main">
+    <!-- Sala de cine -->
+    <section class="reveal" aria-labelledby="sala-cine">
+      <h2 id="sala-cine">Elige tu asiento 🎟️</h2>
+      <div class="card">
+        <div class="theater" aria-label="Sala de cine">
+          <div class="screen" aria-hidden="true"></div>
+
+          <div class="cinema" id="cinema" role="grid" aria-label="Mapa de asientos">
+            <!-- Fila A -->
+            <span class="row-label" aria-hidden="true">Fila A</span>
+            <!-- 10 asientos por fila -->
+            <div class="seat" role="gridcell" aria-label="A1"></div><div class="seat" role="gridcell" aria-label="A2"></div><div class="seat" role="gridcell" aria-label="A3"></div><div class="seat" role="gridcell" aria-label="A4"></div><div class="seat" role="gridcell" aria-label="A5"></div><div class="seat" role="gridcell" aria-label="A6"></div><div class="seat" role="gridcell" aria-label="A7"></div><div class="seat" role="gridcell" aria-label="A8"></div><div class="seat" role="gridcell" aria-label="A9"></div><div class="seat" role="gridcell" aria-label="A10"></div>
+
+            <!-- Fila B -->
+            <span class="row-label" aria-hidden="true">Fila B</span>
+            <div class="seat" role="gridcell" aria-label="B1"></div><div class="seat" role="gridcell" aria-label="B2"></div><div class="seat" role="gridcell" aria-label="B3"></div><div class="seat" role="gridcell" aria-label="B4"></div><div class="seat" role="gridcell" aria-label="B5"></div><div class="seat" role="gridcell" aria-label="B6"></div><div class="seat" role="gridcell" aria-label="B7"></div><div class="seat" role="gridcell" aria-label="B8"></div><div class="seat" role="gridcell" aria-label="B9"></div><div class="seat" role="gridcell" aria-label="B10"></div>
+
+            <!-- Fila C -->
+            <span class="row-label" aria-hidden="true">Fila C</span>
+            <div class="seat" role="gridcell" aria-label="C1"></div><div class="seat" role="gridcell" aria-label="C2"></div><div class="seat" role="gridcell" aria-label="C3"></div><div class="seat" role="gridcell" aria-label="C4"></div><div class="seat" role="gridcell" aria-label="C5"></div><div class="seat" role="gridcell" aria-label="C6"></div><div class="seat" role="gridcell" aria-label="C7"></div><div class="seat" role="gridcell" aria-label="C8"></div><div class="seat" role="gridcell" aria-label="C9"></div><div class="seat" role="gridcell" aria-label="C10"></div>
+
+            <!-- Fila D -->
+            <span class="row-label" aria-hidden="true">Fila D</span>
+            <div class="seat" role="gridcell" aria-label="D1"></div><div class="seat" role="gridcell" aria-label="D2"></div><div class="seat" role="gridcell" aria-label="D3"></div><div class="seat" role="gridcell" aria-label="D4"></div><div class="seat" role="gridcell" aria-label="D5"></div><div class="seat" role="gridcell" aria-label="D6"></div><div class="seat" role="gridcell" aria-label="D7"></div><div class="seat" role="gridcell" aria-label="D8"></div><div class="seat" role="gridcell" aria-label="D9"></div><div class="seat" role="gridcell" aria-label="D10"></div>
+          </div>
+          <br>
+          <div class="legend" aria-hidden="true">
+            <span class="dot"></span> Libre
+            <span class="dot hov"></span> Hover
+            <span class="dot sel"></span> Seleccionado
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- Countdown -->
     <section class="reveal" aria-labelledby="faltan">
       <h2 id="faltan">Faltan…</h2>
@@ -367,6 +463,35 @@
   if(prefersReduced){
     if(rafId){ cancelAnimationFrame(rafId); rafId = 0; }
   }
+
+  // ====== Animación e interacción de asientos ======
+const cinema = document.getElementById('cinema');
+if (cinema) {
+  const seats = [...cinema.querySelectorAll('.seat')];
+
+  // Animación secuencial al entrar (si no se prefiere reducir movimiento)
+  if (!prefersReduced) {
+    seats.forEach((seat, i) => {
+      setTimeout(() => {
+        seat.classList.add('animate','selected');
+      }, 110 * i);
+    });
+    // "Desocupa" algunos para simular disponibilidad
+    setTimeout(() => {
+      seats.forEach((s, idx) => { if (idx % 3 === 0) s.classList.remove('selected'); });
+    }, 110 * seats.length + 500);
+  }
+
+  // Click para seleccionar/deseleccionar
+  seats.forEach(seat => {
+    seat.addEventListener('click', () => {
+      const already = seat.classList.contains('selected');
+      // Si quieres permitir solo 1 seleccionado a la vez, descomenta:
+      // seats.forEach(s => s.classList.remove('selected'));
+      seat.classList.toggle('selected', !already);
+    });
+  });
+}
 </script>
 
 <noscript>

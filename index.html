@@ -151,6 +151,19 @@
     .hero::before{animation:none}
     .card{opacity:1; transform:none}
   }
+
+ .badge .avatar{
+  width:36px;  
+  height:36px;  
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--accent);
+}
+.badge{
+  display:inline-flex; align-items:center; gap:10px; /* un poco más de espacio */
+  padding:8px 14px;
+}
+
 </style>
 </head>
 <body>
@@ -159,8 +172,11 @@
 
     <section class="card" id="card">
       <div class="badge" aria-label="invitación">
+        <img src="img/dayana.jpg" alt="Foto de perfil" class="avatar" />
         <span class="ping" aria-hidden="true"></span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h16v12H4z"/><path d="M4 18h16v2H4z"/><path d="M6 6h2v2H6zM10 6h2v2h-2zM14 6h2v2h-2z" fill="#0b0f16"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M4 4h16v12H4z"/><path d="M4 18h16v2H4z"/><path d="M6 6h2v2H6zM10 6h2v2h-2zM14 6h2v2h-2z" fill="#0b0f16"/>
+        </svg>
         Invitación
       </div>
 
